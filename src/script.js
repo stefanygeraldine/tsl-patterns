@@ -1,7 +1,7 @@
 import * as THREE from 'three/webgpu'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { Inspector } from 'three/addons/inspector/Inspector.js'
-import { uv } from 'three/tsl'
+import { uv, vec3, vec2, add } from 'three/tsl'
 
 /**
  * Base
@@ -92,6 +92,22 @@ const geometry = new THREE.PlaneGeometry(2, 2, 1, 1)
 
 // Material
 const material = new THREE.MeshBasicNodeMaterial()
+// patter 1
+material.colorNode = vec3(uv())
+// patter 2
+material.colorNode = vec3(uv().x)
+// patter 3
+material.colorNode = vec3(uv().x.mul(10).fract())
+// patter 4
+material.colorNode = vec3(
+    add(
+        uv().x.mul(10).fract().step(0.5),
+        uv().y.mul(10).fract().step(0.5)
+    ).sub(1).abs()
+)
+// patter 5
+material.colorNode = vec3(uv().distance(vec2(0.5)))
+material.colorNode = vec3(uv().distance(vec2(0.5)))
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
