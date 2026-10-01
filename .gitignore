@@ -1,0 +1,13 @@
+node_modules
+dist
+.DS_Store
+.venv-depth
+# videos are committed (~75 MB) so Vercel's git builds include them
+public/3d_models_for_testing/
+public/*.tif
+
+# working assets kept out of the deploy
+archive/
+.vercel
+
+.idea
