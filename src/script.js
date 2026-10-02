@@ -88,7 +88,7 @@ renderer.inspector = new Inspector()
  * Patterns
  */
 // Geometry
-const geometry = new THREE.PlaneGeometry(2, 2, 1, 1)
+const geometry = new THREE.PlaneGeometry(1, 1, 1, 1)
 
 // Material
 const material = new THREE.MeshBasicNodeMaterial()
@@ -106,8 +106,10 @@ material.colorNode = vec3(
     ).sub(1).abs()
 )
 // patter 5
-material.colorNode = vec3(uv().distance(vec2(0.5)))
-material.colorNode = vec3(uv().distance(vec2(0.5)))
+//material.colorNode = vec3(uv().sub(0.5))
+material.colorNode = vec3(uv().sub(0.5).length().step())
+
+
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
