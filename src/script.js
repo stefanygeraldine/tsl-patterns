@@ -1,6 +1,6 @@
 import * as THREE from 'three/webgpu'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { createRGBTooltip } from './rgbTooltip.js'
+import { createRGBTooltip, trackUV } from './rgbTooltip.js'
 import { TransformControls } from 'three/addons/controls/TransformControls.js'
 import { Inspector } from 'three/addons/inspector/Inspector.js'
 import {
@@ -132,7 +132,7 @@ const angle = atan(polarUv.x, polarUv.y)
 material.colorNode = vec3(angle.remap(PI.negate(), PI, 0,1))
 
 // pattern 6
-const gridUv = uv().mul(10)
+const gridUv = trackUV(uv()).mul(10).floor()
 material.colorNode = vec3(gridUv)
 
 
@@ -148,7 +148,7 @@ scene.add(mesh)
 /**
  * RGB Tooltip Addon
  */
-const { setColorFn } = createRGBTooltip({ camera, mesh, sizes })
+createRGBTooltip({ camera, mesh, sizes, gridUv })
 
 /**
  * Animate
