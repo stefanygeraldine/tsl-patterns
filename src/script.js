@@ -14,7 +14,7 @@ import {
     PI,
     TWO_PI,
     remap,
-    negate
+    negate, hash
 } from 'three/tsl'
 
 /**
@@ -132,8 +132,11 @@ const angle = atan(polarUv.x, polarUv.y)
 material.colorNode = vec3(angle.remap(PI.negate(), PI, 0,1))
 
 // pattern 6
+//const gridUv = trackUV(uv()).mul(10).floor()
 const gridUv = trackUV(uv()).mul(10).floor()
-material.colorNode = vec3(gridUv)
+const random = hash(gridUv.x)
+//material.colorNode = vec3(gridUv.div(10), 0)
+material.colorNode = vec3(random)
 
 
 // Mesh
@@ -148,7 +151,7 @@ scene.add(mesh)
 /**
  * RGB Tooltip Addon
  */
-createRGBTooltip({ camera, mesh, sizes, gridUv })
+const { tick: tooltipTick } = createRGBTooltip({ camera, mesh, scene, sizes, gridUv })
 
 /**
  * Animate
@@ -161,6 +164,7 @@ const tick = () =>
     controls.update()
 
     renderer.render(scene, camera)
+    tooltipTick(renderer)
 }
 
 renderer.setAnimationLoop(tick)
