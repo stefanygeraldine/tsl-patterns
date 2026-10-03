@@ -1,7 +1,21 @@
 import * as THREE from 'three/webgpu'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { createRGBTooltip } from './rgbTooltip.js'
+import { TransformControls } from 'three/addons/controls/TransformControls.js'
 import { Inspector } from 'three/addons/inspector/Inspector.js'
-import { uv, vec3, vec2, add } from 'three/tsl'
+import {
+    uv,
+    vec3,
+    vec2,
+    add,
+    positionLocal,
+    positionWorld,
+    atan,
+    PI,
+    TWO_PI,
+    remap,
+    negate
+} from 'three/tsl'
 
 /**
  * Base
@@ -106,15 +120,35 @@ material.colorNode = vec3(
     ).sub(1).abs()
 )
 // patter 5
-//material.colorNode = vec3(uv().sub(0.5))
-material.colorNode = vec3(uv().sub(0.5).length().step())
+//material.colorNode = vec3(positionLocal)
+material.colorNode = vec3(uv().sub(0.5))
+//material.colorNode = vec3(uv().sub(0.5).length())
 
+// pattern 6
+const polarUv = uv().sub(0.5)
+const angle = atan(polarUv.x, polarUv.y)
+//material.colorNode = vec3(angle.add(PI).div(TWO_PI))
+//material.colorNode = vec3(angle)
+material.colorNode = vec3(angle.remap(PI.negate(), PI, 0,1))
+
+// pattern 6
+const gridUv = uv().mul(10)
+material.colorNode = vec3(gridUv)
 
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
 mesh.position.y = 1
 scene.add(mesh)
+
+
+
+
+
+/**
+ * RGB Tooltip Addon
+ */
+const { setColorFn } = createRGBTooltip({ camera, mesh, sizes })
 
 /**
  * Animate
@@ -124,11 +158,8 @@ const timer = new THREE.Timer()
 const tick = () =>
 {
     timer.update()
-
-    // Update controls
     controls.update()
 
-    // Render
     renderer.render(scene, camera)
 }
 
