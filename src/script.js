@@ -14,7 +14,7 @@ import {
     PI,
     TWO_PI,
     remap,
-    negate, hash
+    negate, hash, time, mx_noise_float, mx_worley_noise_float
 } from 'three/tsl'
 
 /**
@@ -134,10 +134,23 @@ material.colorNode = vec3(angle.remap(PI.negate(), PI, 0,1))
 // pattern 6
 //const gridUv = trackUV(uv()).mul(10).floor()
 const gridUv = trackUV(uv()).mul(10).floor()
-const random = hash(gridUv.x)
+const random = hash(gridUv.x.mul(10).add(gridUv.y))
 //material.colorNode = vec3(gridUv.div(10), 0)
 material.colorNode = vec3(random)
 
+// pattern 8
+const perlingNoise = mx_noise_float(uv().mul(5))
+material.colorNode = vec3(
+    perlingNoise
+        .mul(5)
+        .add(time)
+        .fract()
+        .step(0.8))
+
+// Pattern 9
+const worleyUv = uv().mul(10)
+const worleyNoise = mx_worley_noise_float(vec3(worleyUv, time))
+material.colorNode = vec3(worleyNoise)
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
