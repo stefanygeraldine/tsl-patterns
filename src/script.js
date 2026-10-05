@@ -133,11 +133,11 @@ material.colorNode = vec3(angle.remap(PI.negate(), PI, 0,1))
 
 // pattern 6
 //const gridUv = trackUV(uv()).mul(10).floor()
-const gridUv = trackUV(uv()).mul(10).floor()
-const random = hash(gridUv.x.mul(10).add(gridUv.y))
+const gridUv = trackUV(uv().x)
+//const random = hash(gridUv.x.mul(10).add(gridUv.y))
 //material.colorNode = vec3(gridUv.div(10), 0)
-material.colorNode = vec3(random)
-
+material.colorNode = vec3(gridUv)
+/*
 // pattern 8
 const perlingNoise = mx_noise_float(uv().mul(5))
 material.colorNode = vec3(
@@ -165,11 +165,6 @@ material.colorNode = palette(
     vec3(0.0, 0.1, 0.2)
 )
 
-// Mesh
-const mesh = new THREE.Mesh(geometry, material)
-mesh.position.y = 1
-scene.add(mesh)
-
 // pattern 10 water
 //const causticsInput = uv().mul(6)
 const causticsInput = vec3(uv().mul(6), time.mul(0.3))
@@ -178,6 +173,14 @@ const causticsNoise = mx_worley_noise_float(causticsInput).pow(3)
 const depthColor = mix(color(0x000000), color(0xFF4900), causticsNoise)
 material.colorNode = vec3(depthColor)
 
+
+*/
+
+
+// Mesh
+const mesh = new THREE.Mesh(geometry, material)
+mesh.position.y = 1
+scene.add(mesh)
 
 
 
