@@ -14,7 +14,7 @@ import {
     PI,
     TWO_PI,
     remap,
-    negate, hash, time, mx_noise_float, mx_worley_noise_float
+    negate, hash, time, mx_noise_float, mx_worley_noise_float, Fn, cos, mul, mix, color
 } from 'three/tsl'
 
 /**
@@ -148,15 +148,35 @@ material.colorNode = vec3(
         .step(0.8))
 
 // Pattern 9
+
+// By Inigo Quilez (https://iquilezles.org/articles/palettes/)
+export const palette = Fn(([ t, a, b, c, d]) =>
+{
+    return a.add(b.mul(cos(mul(6.283185, c.mul(t).add(d)))))
+}, { t: 'float', a: 'vec3', b: 'vec3', c: 'vec3', d: 'vec3', return: 'vec3' })
+
 const worleyUv = uv().mul(10)
 const worleyNoise = mx_worley_noise_float(vec3(worleyUv, time))
-material.colorNode = vec3(worleyNoise)
+material.colorNode = palette(
+    worleyNoise,
+    vec3(0.5, 0.3, 0.4),
+    vec3(0.9, 0.5, 0.4),
+    vec3(1.0, 1.0, 1.0),
+    vec3(0.0, 0.1, 0.2)
+)
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
 mesh.position.y = 1
 scene.add(mesh)
 
+// pattern 10 water
+//const causticsInput = uv().mul(6)
+const causticsInput = vec3(uv().mul(6), time.mul(0.3))
+//const causticsNoise = mx_worley_noise_float(causticsInput)
+const causticsNoise = mx_worley_noise_float(causticsInput).pow(3)
+const depthColor = mix(color(0x000000), color(0xFF4900), causticsNoise)
+material.colorNode = vec3(depthColor)
 
 
 
